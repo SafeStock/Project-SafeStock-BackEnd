@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import java.util.List;
 
 @Entity
-@Table(name = "CrecheV2")
+@Table(name = "Creche")
 public class CrecheEntity {
 
     @Id
