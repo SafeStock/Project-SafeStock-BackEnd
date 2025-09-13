@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
-@RestController("historicoAlertasControllerV2")
-@RequestMapping("/api/historico_alertas_v2")
+@RestController
+@RequestMapping("/api/historicoAlertas")
 public class HistoricoAlertasController {
 
     private final HistoricoAlertasUseCase useCase;
 
-    public HistoricoAlertasController(@Qualifier("historicoAlertasServiceV2") HistoricoAlertasUseCase useCase) {
+    public HistoricoAlertasController(HistoricoAlertasUseCase useCase) {
         this.useCase = useCase;
     }
 
@@ -49,6 +49,6 @@ public class HistoricoAlertasController {
         resp.setNomeProduto(saved.getNomeProduto());
         if (saved.getProduto() != null) resp.setProdutoId(saved.getProduto().getId());
 
-        return ResponseEntity.created(URI.create("/api/historico_alertas_v2/" + resp.getId())).body(resp);
+        return ResponseEntity.created(URI.create("/api/historico_alertas" + resp.getId())).body(resp);
     }
 }

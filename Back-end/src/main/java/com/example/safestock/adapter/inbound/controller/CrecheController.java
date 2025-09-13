@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
-@RestController("crecheControllerV2")
-@RequestMapping("/api/creche_v2")
+@RestController
+@RequestMapping("/api/creches")
 public class CrecheController {
 
     private final CrecheUseCase useCase;
 
 
-    public CrecheController(@Qualifier("crecheServiceV2") CrecheUseCase useCase) {
+    public CrecheController(CrecheUseCase useCase) {
         this.useCase = useCase;
     }
 
@@ -41,6 +41,6 @@ public class CrecheController {
         resp.setTelefone(saved.getTelefone());
         resp.setCnpj(saved.getCnpj());
 
-        return ResponseEntity.created(URI.create("/api/creche_v2/" + resp.getId())).body(resp);
+        return ResponseEntity.created(URI.create("/api/creches" + resp.getId())).body(resp);
     }
 }

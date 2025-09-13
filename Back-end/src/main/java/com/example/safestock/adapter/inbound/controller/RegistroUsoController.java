@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
-@RestController("registroUsoControllerV2")
-@RequestMapping("/api/registro_uso_v2")
+@RestController
+@RequestMapping("/api/registroUso")
 public class RegistroUsoController {
 
     private final RegistroUsoUseCase useCase;
 
-    public RegistroUsoController(@Qualifier("registroUsoServiceV2") RegistroUsoUseCase useCase) {
+    public RegistroUsoController(RegistroUsoUseCase useCase) {
         this.useCase = useCase;
     }
 
-    @PostMapping("/api/registro_uso_v2")
+    @PostMapping("/cadastro")
     public ResponseEntity<RegistroUsoResponse> create(@RequestBody @Valid RegistroUsoRequest req) {
 
         RegistroUso d = new RegistroUso();
@@ -46,15 +46,15 @@ public class RegistroUsoController {
         resp.setDataHoraSaida(saved.getDataHoraSaida());
         resp.setFuncionarioId(saved.getFuncionario() != null ? saved.getFuncionario().getId() : null);
 
-        return ResponseEntity.created(URI.create("/api/registro_uso_v2/" + resp.getId())).body(resp);
+        return ResponseEntity.created(URI.create("/api/registroUso" + resp.getId())).body(resp);
     }
 
-    @GetMapping("/api/registro_uso_v2")
+    @GetMapping
     public ResponseEntity<List<RegistroUso>> list() {
         return ResponseEntity.ok(useCase.listar());
     }
 
-    @DeleteMapping("/api/registro_uso_v2/{id}")
+    @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         useCase.deletar(id);
         return ResponseEntity.noContent().build();

@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service("registroUsoServiceV2")
+@Service
 public class RegistroUsoService implements RegistroUsoUseCase {
 
     private final RegistroUsoRepository registroUsoRepository;
 
-    public RegistroUsoService(@Qualifier("registroUsoRepositoryImpl") RegistroUsoRepository registroUsoRepository) {
+    public RegistroUsoService( RegistroUsoRepository registroUsoRepository) {
         this.registroUsoRepository = registroUsoRepository;
     }
 

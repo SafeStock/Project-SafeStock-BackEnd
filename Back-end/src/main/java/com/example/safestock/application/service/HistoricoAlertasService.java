@@ -6,12 +6,12 @@ import com.example.safestock.domain.model.HistoricoAlertas;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-@Service("historicoAlertasServiceV2")
+@Service
 public class HistoricoAlertasService implements HistoricoAlertasUseCase {
 
     private final HistoricoAlertasRepository historicoAlertasRepository;
 
-    public HistoricoAlertasService(@Qualifier("historicoAlertasRepositoryImpl") HistoricoAlertasRepository historicoAlertasRepository) {
+    public HistoricoAlertasService(HistoricoAlertasRepository historicoAlertasRepository) {
         this.historicoAlertasRepository = historicoAlertasRepository;
     }
 

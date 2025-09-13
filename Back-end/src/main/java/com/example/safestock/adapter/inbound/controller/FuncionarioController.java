@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RestController("funcionarioControllerV2")
-@RequestMapping("/api/funcionarios_v2")
+@RestController
+@RequestMapping("/api/funcionarios")
 public class FuncionarioController {
 
     private final FuncionarioUseCase useCase;
 
-    public FuncionarioController(@Qualifier("funcionarioServiceV2") FuncionarioUseCase useCase) {
+    public FuncionarioController(FuncionarioUseCase useCase) {
         this.useCase = useCase;
     }
 
@@ -26,7 +26,7 @@ public class FuncionarioController {
         return ResponseEntity.ok(useCase.buscarFuncionarios());
     }
 
-    @GetMapping("/listar_id/{id}")
+    @GetMapping("/listar/{id}")
     public ResponseEntity<Funcionario> buscarFuncionarioPorId(@PathVariable Long id) {
         Optional<Funcionario> funcionarioOpt = useCase.buscarFuncionarioPorId(id);
 

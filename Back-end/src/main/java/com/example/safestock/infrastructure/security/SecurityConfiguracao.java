@@ -2,17 +2,24 @@ package com.example.safestock.infrastructure.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.*;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.*;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.*;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.*;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
@@ -21,6 +28,8 @@ public class SecurityConfiguracao {
     private final AutenticacaoEntryPoint entryPoint;
     private final AutenticacaoFilter jwtFilter;
     private final UserDetailsService userDetailsService;
+
+    private static final String CLIENT_URL = "http://localhost:5173";
 
     public SecurityConfiguracao(
             AutenticacaoEntryPoint entryPoint,
@@ -32,13 +41,13 @@ public class SecurityConfiguracao {
         this.userDetailsService = userDetailsService;
     }
 
-    // Password encoder padrão
+    // Password encoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Provider baseado no UserDetailsService (carrega usuário por email/username)
+    // Provider baseado no UserDetailsService
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider prov = new DaoAuthenticationProvider();
@@ -52,31 +61,38 @@ public class SecurityConfiguracao {
         return config.getAuthenticationManager();
     }
 
+    // CORS configuration
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of(CLIENT_URL));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setExposedHeaders(List.of(HttpHeaders.CONTENT_DISPOSITION));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
     // Cadeia de segurança
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // Sem session (JWT = stateless)
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(csrf -> csrf.disable()) // em APIs com JWT geralmente desativa
-
                 .exceptionHandling(eh -> eh.authenticationEntryPoint(entryPoint))
-
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoints Públicos:
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
-
-                        // Qualquer outra rota precisa de token
+                        .requestMatchers("/api/funcionarios/login").permitAll()
                         .anyRequest().authenticated()
                 )
-
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
-                .cors(c -> {}); // usa config padrão do Spring
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())); // usa nosso bean de CORS
 
-        // Coloca o filtro JWT antes do filtro de usuário/senha
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
