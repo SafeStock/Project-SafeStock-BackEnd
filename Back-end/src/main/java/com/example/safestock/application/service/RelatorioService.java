@@ -6,12 +6,12 @@ import com.example.safestock.domain.model.Relatorio;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-@Service("relatorioServiceV2")
+@Service
 public class RelatorioService implements RelatorioUseCase {
 
     private final RelatorioRepository relatorioRepository;
 
-    public RelatorioService(@Qualifier("relatorioRepositoryImpl") RelatorioRepository relatorioRepository) {
+    public RelatorioService(RelatorioRepository relatorioRepository) {
         this.relatorioRepository = relatorioRepository;
     }
 

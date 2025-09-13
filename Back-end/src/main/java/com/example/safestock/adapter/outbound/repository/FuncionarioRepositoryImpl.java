@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-@Repository("funcionarioRepositoryImpl")
+@Repository
 public class FuncionarioRepositoryImpl implements FuncionarioRepository {
 
     private final JpaFuncionarioRepository jpa;
@@ -47,5 +47,10 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
             throw new NotFoundException("Funcionario " + id + " não encontrado");
         }
         jpa.deleteById(id);
+    }
+
+    @Override
+    public Optional<Funcionario> buscarFuncionarioPorEmail(String email) {
+        return jpa.findByEmail(email).map(FuncionarioMapper::toDomain);
     }
 }

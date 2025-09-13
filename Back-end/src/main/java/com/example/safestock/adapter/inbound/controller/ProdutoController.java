@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
-@RestController("produtoControllerV2")
-@RequestMapping("/api/produtos_v2")
+@RestController
+@RequestMapping("/api/produtos")
 public class ProdutoController {
 
     private final ProdutoUseCase useCase;
 
-    public ProdutoController(@Qualifier("produtoServiceV2") ProdutoUseCase useCase) {
+    public ProdutoController(ProdutoUseCase useCase) {
         this.useCase = useCase;
     }
 
@@ -41,6 +41,6 @@ public class ProdutoController {
         r.setId(saved.getId()); r.setNome(saved.getNome()); r.setQuantidade(saved.getQuantidade()); r.setLimiteSemanalDeUso(saved.getLimiteSemanalDeUso()); r.setDataValidade(saved.getDataValidade()); r.setDataEntrada(saved.getDataEntrada());
         if (saved.getCreche() != null) r.setCrecheId(saved.getCreche().getId());
 
-        return ResponseEntity.created(URI.create("/api/produtos_v2/" + r.getId())).body(r);
+        return ResponseEntity.created(URI.create("/api/produtos" + r.getId())).body(r);
     }
 }

@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
-@RestController("relatorioControllerV2")
-@RequestMapping("/api/relatorios_v2")
+@RestController
+@RequestMapping("/api/relatorios")
 public class RelatorioController {
 
     private final RelatorioUseCase useCase;
 
-    public RelatorioController(@Qualifier("relatorioServiceV2") RelatorioUseCase useCase) {
+    public RelatorioController(RelatorioUseCase useCase) {
         this.useCase = useCase;
     }
 
@@ -59,7 +59,7 @@ public class RelatorioController {
         if (saved.getRegistroUso() != null) resp.setRegistroUsoId(saved.getRegistroUso().getId());
         if (saved.getAlerta() != null) resp.setAlertaId(saved.getAlerta().getId());
 
-        return ResponseEntity.created(URI.create("/api/relatorios_v2/" + resp.getIdRelatorio())).body(resp);
+        return ResponseEntity.created(URI.create("/api/relatorios" + resp.getIdRelatorio())).body(resp);
     }
 
 }

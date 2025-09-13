@@ -3,19 +3,21 @@ package com.example.safestock.application.service;
 import com.example.safestock.application.port.in.FuncionarioUseCase;
 import com.example.safestock.application.port.out.FuncionarioRepository;
 import com.example.safestock.domain.model.Funcionario;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service("funcionarioServiceV2")
+@Service
 public class FuncionarioService implements FuncionarioUseCase {
 
     private final FuncionarioRepository funcionarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public FuncionarioService(@Qualifier("funcionarioRepositoryImpl") FuncionarioRepository funcionarioRepository) {
+    public FuncionarioService(FuncionarioRepository funcionarioRepository, PasswordEncoder passwordEncoder) {
         this.funcionarioRepository = funcionarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 //    @Override
@@ -37,5 +39,11 @@ public class FuncionarioService implements FuncionarioUseCase {
     @Override
     public void deletarFuncionario(Long id) {
         funcionarioRepository.deleteFuncionario(id);
+    }
+
+    @Override
+    public Optional<Funcionario> autenticar(String email, String senha) {
+        return funcionarioRepository.buscarFuncionarioPorEmail(email)
+                .filter(f -> passwordEncoder.matches(senha, f.getSenha()));
     }
 }

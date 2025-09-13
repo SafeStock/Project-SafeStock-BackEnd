@@ -6,12 +6,12 @@ import com.example.safestock.domain.model.Produto;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-@Service("produtoServiceV2")
+@Service
 public class ProdutoService implements ProdutoUseCase {
 
     private final ProdutoRepository produtoRepository;
 
-    public ProdutoService(@Qualifier("produtoRepositoryImpl") ProdutoRepository produtoRepository) {
+    public ProdutoService(ProdutoRepository produtoRepository) {
         this.produtoRepository = produtoRepository;
     }
 

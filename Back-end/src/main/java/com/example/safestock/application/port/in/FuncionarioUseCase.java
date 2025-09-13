@@ -14,4 +14,6 @@ public interface FuncionarioUseCase {
     Optional<Funcionario> buscarFuncionarioPorId(Long id);
 
     void deletarFuncionario(Long id);
+
+    Optional<Funcionario> autenticar(String email, String senha);
 }

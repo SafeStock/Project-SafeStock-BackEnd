@@ -30,10 +30,10 @@ public class GerenciadorTokenJwt {
         Date validade = new Date(agora.getTime() + expirationMs);
 
         return Jwts.builder()
-                .setSubject(user.getUsername()) // geralmente email/username
+                .setSubject(user.getUsername())
                 .setIssuedAt(agora)
                 .setExpiration(validade)
-                .signWith(secretKey, Jwts.SIG.HS256)
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -55,10 +55,10 @@ public class GerenciadorTokenJwt {
     }
 
     private Claims parseClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(secretKey)
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
