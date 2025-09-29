@@ -7,6 +7,8 @@ import java.util.List;
 public interface RegistroUsoUseCase {
 
     RegistroUso criar(RegistroUso registroUso);
+
     List<RegistroUso> listar();
+
     void deletar(Long id);
 }
