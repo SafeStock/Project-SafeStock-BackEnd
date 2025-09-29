@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -30,32 +31,40 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        // Autentica usando AuthenticationManager
-        UsernamePasswordAuthenticationToken credentials =
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha());
+        Optional<Funcionario> funcionarioOpt = funcionarioUseCase.autenticar(request.getEmail(), request.getSenha());
 
-        Authentication authentication = authenticationManager.authenticate(credentials);
+        if (funcionarioOpt.isEmpty()) {
+            return ResponseEntity.status(401).body("Credenciais inválidas");
+        }
 
+        Funcionario funcionario = funcionarioOpt.get();
+
+        // Autentica via Spring Security
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha())
+        );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // Busca o funcionário no banco (para pegar dados completos, como nome e cargo)
-        Funcionario funcionario = funcionarioUseCase.buscarFuncionarioPorEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Email não cadastrado"));
+        // Constrói UserDetails a partir do domínio Funcionario
+        UserDetails userDetails = org.springframework.security.core.userdetails.User
+                .withUsername(funcionario.getEmail())
+                .password(funcionario.getSenha())
+                .roles(funcionario.getCargo().name())
+                .build();
 
-        // Gera token JWT
-        String token = tokenService.gerarToken(authentication);
+        String token = tokenService.gerarToken(userDetails);
 
-        // Retorna dados do funcionário + token
-        LoginResponse response = new LoginResponse(
-                funcionario.getId(),
-                funcionario.getNome(),
-                funcionario.getSobrenome(),
-                funcionario.getEmail(),
-                funcionario.getCargo().name(),
-                token
+        // Agora devolve um LoginResponse COMPLETO
+        return ResponseEntity.ok(
+                new LoginResponse(
+                        funcionario.getId(),
+                        funcionario.getNome(),
+                        funcionario.getSobrenome(),
+                        funcionario.getEmail(),
+                        funcionario.getCargo().name(),
+                        token
+                )
         );
-
-        return ResponseEntity.ok(response);
     }
 
     // DTOs
@@ -83,6 +92,10 @@ public class AuthController {
             this.sobrenome = sobrenome;
             this.email = email;
             this.cargo = cargo;
+            this.token = token;
+        }
+
+        public LoginResponse(String token) {
             this.token = token;
         }
 
