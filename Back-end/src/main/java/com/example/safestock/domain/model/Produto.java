@@ -30,6 +30,9 @@ public class Produto {
         this.dataEntrada = dataEntrada;
     }
 
+    public Produto(Long id, String nome, CategoriaProduto categoriaProduto, int quantidade, int limiteSemanalDeUso, LocalDate dataValidade, LocalDate dataEntrada, Long aLong) {
+    }
+
     public Long getId() {
         return id;
     }
@@ -90,7 +93,7 @@ public class Produto {
         return creche;
     }
 
-    public void setCreche(Creche creche) {
+    public void setCreche() {
         this.creche = creche;
     }
 
@@ -101,5 +104,7 @@ public class Produto {
     public void setRelatorio(List<Relatorio> relatorio) {
         this.relatorio = relatorio;
     }
+
+
 
 }
