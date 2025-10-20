@@ -1,5 +1,7 @@
 package com.example.safestock.adapter.inbound.dto;
 
+import com.example.safestock.domain.enuns.CategoriaProduto;
+
 import java.time.LocalDate;
 
 public class ProdutoResponse {
@@ -11,6 +13,18 @@ public class ProdutoResponse {
     private LocalDate dataEntrada;
     private Long crecheId;
 
+    public ProdutoResponse() {
+    }
+
+    public ProdutoResponse(Long id, String nome, int quantidade, int limiteSemanalDeUso, LocalDate dataValidade, LocalDate dataEntrada, Long crecheId) {
+        this.id = id;
+        this.nome = nome;
+        this.quantidade = quantidade;
+        this.limiteSemanalDeUso = limiteSemanalDeUso;
+        this.dataValidade = dataValidade;
+        this.dataEntrada = dataEntrada;
+        this.crecheId = crecheId;
+    }
 
     // getters/setters
     public Long getId() { return id; }
@@ -27,4 +41,24 @@ public class ProdutoResponse {
     public void setDataEntrada(LocalDate dataEntrada) { this.dataEntrada = dataEntrada; }
     public Long getCrecheId() { return crecheId; }
     public void setCrecheId(Long crecheId) { this.crecheId = crecheId; }
+
+    public record ProdutoRespons(
+            Long id,
+            String nome,
+            CategoriaProduto categoriaProduto,
+            int quantidade,
+            LocalDate dataValidade,
+            LocalDate dataEntrada,
+            Long crecheId
+    ) {}
+
+    public record ProdutoListarResponse(
+            Long id,
+            String nome,
+            CategoriaProduto categoriaProduto,
+            int quantidade,
+            LocalDate dataValidade
+    ) {}
+
+    public record KpiQtdResponse(Long qtd) {}
 }

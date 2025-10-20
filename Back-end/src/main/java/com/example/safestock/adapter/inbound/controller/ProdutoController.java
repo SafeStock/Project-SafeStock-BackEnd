@@ -1,46 +1,93 @@
 package com.example.safestock.adapter.inbound.controller;
 
-import com.example.safestock.adapter.inbound.dto.ProdutoRequest;
-import com.example.safestock.adapter.inbound.dto.ProdutoResponse;
-import com.example.safestock.application.port.in.ProdutoUseCase;
-import com.example.safestock.domain.model.Creche;
+import com.example.safestock.application.service.ProdutoService;
 import com.example.safestock.domain.model.Produto;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/produtos")
 public class ProdutoController {
 
-    private final ProdutoUseCase useCase;
+    private final ProdutoService produtoService;
 
-    public ProdutoController(ProdutoUseCase useCase) {
-        this.useCase = useCase;
+    public ProdutoController(ProdutoService produtoService) {
+        this.produtoService = produtoService;
     }
 
+    // -------------------------------
+    // CRUD BÁSICO
+    // -------------------------------
+
     @PostMapping
-    public ResponseEntity<ProdutoResponse> create(@RequestBody @Valid ProdutoRequest req) {
-        Produto d = new Produto();
-        d.setNome(req.getNome());
-        d.setCategoriaProduto(req.getCategoriaProduto());
-        d.setQuantidade(req.getQuantidade());
-        d.setLimiteSemanalDeUso(req.getLimiteSemanalDeUso());
-        d.setDataValidade(req.getDataValidade());
-        d.setDataEntrada(req.getDataEntrada());
-        if (req.getCrecheId() != null) { Creche c = new Creche(); c.setId(req.getCrecheId()); d.setCreche(c); }
+    public ResponseEntity<Void> criarProduto(@RequestBody Produto produto) {
+        produtoService.salvarProduto(produto);
+        return ResponseEntity.ok().build();
+    }
 
-        Produto saved = useCase.criar(d);
-        ProdutoResponse r = new ProdutoResponse();
-        r.setId(saved.getId()); r.setNome(saved.getNome()); r.setQuantidade(saved.getQuantidade()); r.setLimiteSemanalDeUso(saved.getLimiteSemanalDeUso()); r.setDataValidade(saved.getDataValidade()); r.setDataEntrada(saved.getDataEntrada());
-        if (saved.getCreche() != null) r.setCrecheId(saved.getCreche().getId());
+    @GetMapping("/listar")
+    public ResponseEntity<List<Produto>> listarTodos() {
+        List<Produto> produtos = produtoService.listarTodos();
+        return ResponseEntity.ok(produtos);
+    }
 
-        return ResponseEntity.created(URI.create("/api/produtos" + r.getId())).body(r);
+    @GetMapping("/{id}")
+    public ResponseEntity<Produto> buscarPorId(@PathVariable Long id) {
+        return produtoService.buscarPorId(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> atualizarProduto(@PathVariable Long id, @RequestBody Produto produtoAtualizado) {
+        return produtoService.buscarPorId(id)
+                .map(produtoExistente -> {
+                    produtoAtualizado.setId(id);
+                    produtoService.salvarProduto(produtoAtualizado);
+                    return ResponseEntity.ok().<Void>build();
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarProduto(@PathVariable Long id) {
+        if (produtoService.buscarPorId(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        produtoService.deletarPorId(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> contarProdutos() {
+        return ResponseEntity.ok(produtoService.contarProdutos());
+    }
+
+    // -------------------------------
+    // ENDPOINTS DE KPI
+    // -------------------------------
+
+    @GetMapping("/kpi/proximos-da-validade")
+    public ResponseEntity<List<Produto>> listarProdutosProximosDaValidade() {
+        List<Produto> produtos = produtoService.listarProdutosProximosDaValidade();
+        return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/kpi/proximos-da-validade/count")
+    public ResponseEntity<Long> contarProdutosProximosDaValidade() {
+        return ResponseEntity.ok(produtoService.contarProdutosProximosDaValidade());
+    }
+
+    @GetMapping("/kpi/proximos-limite-uso")
+    public ResponseEntity<List<Produto>> listarProdutosProximosLimiteUso() {
+        List<Produto> produtos = produtoService.listarProdutosProximosLimiteUso();
+        return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/kpi/proximos-limite-uso/count")
+    public ResponseEntity<Long> contarProdutosProximosLimiteUso() {
+        return ResponseEntity.ok(produtoService.contarProdutosProximosLimiteUso());
     }
 }
