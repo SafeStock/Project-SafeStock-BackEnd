@@ -27,10 +27,13 @@ public class AutenticacaoFilter extends OncePerRequestFilter {
     // Endpoints públicos (não passam no filtro)
     private final List<String> publicMatchers = List.of(
             "/auth/**",
+            "/api/funcionarios/login/**",
+            "/api/produtos/kpi/**",
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
-            "/h2-console/**"
+            "/h2-console/**",
+            "/error/**"
     );
 
     public AutenticacaoFilter(GerenciadorTokenJwt tokenService, UserDetailsService userDetailsService) {

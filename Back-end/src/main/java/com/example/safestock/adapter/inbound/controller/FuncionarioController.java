@@ -1,11 +1,13 @@
 package com.example.safestock.adapter.inbound.controller;
 
+import com.example.safestock.adapter.inbound.dto.FuncionarioResponse;
 import com.example.safestock.adapter.outbound.error.NotFoundException;
 import com.example.safestock.application.port.in.FuncionarioUseCase;
 import com.example.safestock.domain.model.Funcionario;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,9 +23,17 @@ public class FuncionarioController {
         this.useCase = useCase;
     }
 
-    @GetMapping("/listar")
-    public ResponseEntity<List<Funcionario>> buscarFuncionarios() {
-        return ResponseEntity.ok(useCase.buscarFuncionarios());
+    @GetMapping
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<List<FuncionarioResponse>> listarFuncionarios() {
+        String emailLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<FuncionarioResponse> funcionarios = useCase.buscarFuncionariosExcetoLogadoEDono(emailLogado);
+
+        if (funcionarios.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(funcionarios);
     }
 
     @GetMapping("/listar/{id}")
