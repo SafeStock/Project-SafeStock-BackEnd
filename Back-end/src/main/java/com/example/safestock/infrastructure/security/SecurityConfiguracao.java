@@ -77,6 +77,7 @@ public class SecurityConfiguracao {
     }
 
     // Cadeia de segurança
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -106,7 +107,6 @@ public class SecurityConfiguracao {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())); // usa nosso bean de CORS
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 }

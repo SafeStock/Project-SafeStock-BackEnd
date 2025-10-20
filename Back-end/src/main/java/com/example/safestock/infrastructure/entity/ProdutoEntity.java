@@ -99,7 +99,7 @@ public class ProdutoEntity {
         return creche;
     }
 
-    public void setCreche(CrecheEntity creche) {
+    public void setCreche() {
         this.creche = creche;
     }
 
@@ -109,5 +109,9 @@ public class ProdutoEntity {
 
     public void setRelatorios(List<RelatorioEntity> relatorios) {
         this.relatorios = relatorios;
+    }
+
+    public Long getCrecheId() {
+        return creche.getId();
     }
 }
