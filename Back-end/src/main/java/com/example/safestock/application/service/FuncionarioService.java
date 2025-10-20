@@ -1,7 +1,10 @@
 package com.example.safestock.application.service;
 
+import com.example.safestock.adapter.inbound.dto.FuncionarioResponse;
+import com.example.safestock.adapter.outbound.mapper.FuncionarioResponseMapper;
 import com.example.safestock.application.port.in.FuncionarioUseCase;
 import com.example.safestock.application.port.out.FuncionarioRepository;
+import com.example.safestock.domain.enuns.CargoFuncionario;
 import com.example.safestock.domain.model.Funcionario;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,8 +30,12 @@ public class FuncionarioService implements FuncionarioUseCase {
 //    }
 
     @Override
-    public List<Funcionario> buscarFuncionarios() {
-        return funcionarioRepository.buscarFuncionario();
+    public List<FuncionarioResponse> buscarFuncionariosExcetoLogadoEDono(String emailLogado) {
+        List<Funcionario> funcionarios = funcionarioRepository.buscarPorEmailDiferenteECargoDiferente(emailLogado, CargoFuncionario.dono);
+
+        return funcionarios.stream()
+                .map(FuncionarioResponseMapper::toResponse)
+                .toList();
     }
 
     @Override

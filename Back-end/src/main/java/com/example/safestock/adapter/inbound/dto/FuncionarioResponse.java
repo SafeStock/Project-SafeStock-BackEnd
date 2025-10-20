@@ -1,5 +1,7 @@
 package com.example.safestock.adapter.inbound.dto;
 
+import com.example.safestock.domain.enuns.CargoFuncionario;
+
 public class FuncionarioResponse {
 
     private Long id;
@@ -8,6 +10,7 @@ public class FuncionarioResponse {
     private String email;
     private String telefone;
     private Long crecheId;
+    private CargoFuncionario cargo;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -21,4 +24,10 @@ public class FuncionarioResponse {
     public void setTelefone(String telefone) { this.telefone = telefone; }
     public Long getCrecheId() { return crecheId; }
     public void setCrecheId(Long crecheId) { this.crecheId = crecheId; }
+    public CargoFuncionario getCargo() {
+        return cargo;
+    }
+    public void setCargo(CargoFuncionario cargo) {
+        this.cargo = cargo;
+    }
 }
