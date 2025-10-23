@@ -48,4 +48,9 @@ public class RegistroUsoRepositoryImpl implements RegistroUsoRepository {
         jpa.deleteById(id);
     }
 
+    @Override
+    public Long sumQuantidadeRegistroDeUsoMes(int ano, int mes) {
+        Long total = jpa.sumQuantidadeRegistroDeUsoMes(ano, mes);
+        return total != null ? total : 0L;
+    }
 }

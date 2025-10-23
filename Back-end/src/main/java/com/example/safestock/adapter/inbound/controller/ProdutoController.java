@@ -2,6 +2,7 @@ package com.example.safestock.adapter.inbound.controller;
 
 import com.example.safestock.application.service.ProdutoService;
 import com.example.safestock.domain.model.Produto;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/produtos")
+@SecurityRequirement(name = "Bearer")
 public class ProdutoController {
 
     private final ProdutoService produtoService;
@@ -17,17 +19,13 @@ public class ProdutoController {
         this.produtoService = produtoService;
     }
 
-    // -------------------------------
-    // CRUD BÁSICO
-    // -------------------------------
-
-    @PostMapping
+    @PostMapping("/cadastro")
     public ResponseEntity<Void> criarProduto(@RequestBody Produto produto) {
         produtoService.salvarProduto(produto);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/listar")
+    @GetMapping
     public ResponseEntity<List<Produto>> listarTodos() {
         List<Produto> produtos = produtoService.listarTodos();
         return ResponseEntity.ok(produtos);
@@ -40,7 +38,7 @@ public class ProdutoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/atualizar/{id}")
     public ResponseEntity<Void> atualizarProduto(@PathVariable Long id, @RequestBody Produto produtoAtualizado) {
         return produtoService.buscarPorId(id)
                 .map(produtoExistente -> {
@@ -51,7 +49,7 @@ public class ProdutoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> deletarProduto(@PathVariable Long id) {
         if (produtoService.buscarPorId(id).isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -69,25 +67,35 @@ public class ProdutoController {
     // ENDPOINTS DE KPI
     // -------------------------------
 
-    @GetMapping("/kpi/proximos-da-validade")
+    @GetMapping("/kpi/proximosvalidade")
     public ResponseEntity<List<Produto>> listarProdutosProximosDaValidade() {
         List<Produto> produtos = produtoService.listarProdutosProximosDaValidade();
         return ResponseEntity.ok(produtos);
     }
 
-    @GetMapping("/kpi/proximos-da-validade/count")
+    @GetMapping("/kpi/totalproximosvalidade")
     public ResponseEntity<Long> contarProdutosProximosDaValidade() {
         return ResponseEntity.ok(produtoService.contarProdutosProximosDaValidade());
     }
 
-    @GetMapping("/kpi/proximos-limite-uso")
+    @GetMapping("/kpi/proximoslimite")
     public ResponseEntity<List<Produto>> listarProdutosProximosLimiteUso() {
         List<Produto> produtos = produtoService.listarProdutosProximosLimiteUso();
         return ResponseEntity.ok(produtos);
     }
 
-    @GetMapping("/kpi/proximos-limite-uso/count")
+    @GetMapping("/kpi/totalproximoslimite")
     public ResponseEntity<Long> contarProdutosProximosLimiteUso() {
         return ResponseEntity.ok(produtoService.contarProdutosProximosLimiteUso());
+    }
+
+    @GetMapping("/kpi/totalprodutos")
+    public ResponseEntity<Long> contarProdutosCadastrados() {
+        return ResponseEntity.ok(produtoService.contarProdutosCadastrados());
+    }
+
+    @GetMapping("/kpi/totalretiradoestoque")
+    public ResponseEntity<Long> contarProdutosRetiradosDoEstoque() {
+        return ResponseEntity.ok(produtoService.contarProdutosRetiradosDoEstoqueMesAtual());
     }
 }
