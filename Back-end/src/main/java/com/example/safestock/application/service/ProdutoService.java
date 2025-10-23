@@ -2,6 +2,8 @@ package com.example.safestock.application.service;
 
 import com.example.safestock.application.port.out.ProdutoRepository;
 import com.example.safestock.domain.model.Produto;
+import com.example.safestock.application.service.RegistroUsoService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -13,8 +15,11 @@ public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
 
-    public ProdutoService(ProdutoRepository produtoRepository) {
+    private final RegistroUsoService registroUsoService;
+
+    public ProdutoService(ProdutoRepository produtoRepository, RegistroUsoService registroUsoService) {
         this.produtoRepository = produtoRepository;
+        this.registroUsoService = registroUsoService;
     }
 
     public void salvarProduto(Produto produto) {
@@ -29,6 +34,7 @@ public class ProdutoService {
         return produtoRepository.findById(id);
     }
 
+    @Transactional
     public void deletarPorId(Long id) {
         produtoRepository.deleteById(id);
     }
@@ -57,5 +63,13 @@ public class ProdutoService {
 
     public Long contarProdutosProximosLimiteUso() {
         return produtoRepository.countProdutosProximosLimiteUso();
+    }
+
+    public Long contarProdutosCadastrados() {
+        return produtoRepository.count();
+    }
+
+    public Long contarProdutosRetiradosDoEstoqueMesAtual() {
+        return registroUsoService.contarProdutosRetiradosDoEstoqueMesAtual();
     }
 }
