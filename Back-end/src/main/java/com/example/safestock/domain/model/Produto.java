@@ -17,7 +17,6 @@ public class Produto {
     private Creche creche;
     private List<Relatorio> relatorio;
 
-
     public Produto() {
     }
 
@@ -49,20 +48,20 @@ public class Produto {
         this.nome = nome;
     }
 
-    public int getQuantidade() {
-        return quantidade;
-    }
-
-    public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
-    }
-
     public CategoriaProduto getCategoriaProduto() {
         return categoriaProduto;
     }
 
     public void setCategoriaProduto(CategoriaProduto categoriaProduto) {
         this.categoriaProduto = categoriaProduto;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
     }
 
     public int getLimiteSemanalDeUso() {
@@ -93,7 +92,8 @@ public class Produto {
         return creche;
     }
 
-    public void setCreche() {
+    // ✅ CORREÇÃO: Adicionar parâmetro
+    public void setCreche(Creche creche) {
         this.creche = creche;
     }
 
@@ -104,7 +104,4 @@ public class Produto {
     public void setRelatorio(List<Relatorio> relatorio) {
         this.relatorio = relatorio;
     }
-
-
-
 }

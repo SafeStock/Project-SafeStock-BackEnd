@@ -15,4 +15,6 @@ public interface FuncionarioRepository {
     void deleteFuncionario(Long id);
 
     Optional<Funcionario> buscarFuncionarioPorEmail(String email);
+
+    boolean existsById(Long id);
 }

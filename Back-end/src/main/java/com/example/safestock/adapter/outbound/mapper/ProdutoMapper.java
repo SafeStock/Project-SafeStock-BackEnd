@@ -25,7 +25,14 @@ public class ProdutoMapper {
         produto.setDataValidade(entity.getDataValidade());
         produto.setDataEntrada(entity.getDataEntrada());
         produto.setCategoriaProduto(entity.getCategoriaProduto());
-        produto.setCreche(); // supondo que seja um objeto do tipo Creche
+
+        // ✅ CORREÇÃO: Apenas setar creche se for necessário e de forma segura
+        if (entity.getCreche() != null) {
+            Creche creche = new Creche();
+            creche.setId(entity.getCreche().getId()); // Apenas ID para evitar LazyInitialization
+            produto.setCreche(creche); // ✅ Agora funciona com parâmetro
+        }
+
         return produto;
     }
 
@@ -40,7 +47,14 @@ public class ProdutoMapper {
         entity.setDataValidade(produto.getDataValidade());
         entity.setDataEntrada(produto.getDataEntrada());
         entity.setCategoriaProduto(produto.getCategoriaProduto());
-        entity.setCreche();
+
+        // ✅ CORREÇÃO: Apenas setar creche se for necessário
+        if (produto.getCreche() != null && produto.getCreche().getId() != null) {
+            CrecheEntity crecheEntity = new CrecheEntity();
+            crecheEntity.setId(produto.getCreche().getId());
+            entity.setCreche(crecheEntity); // ✅ Agora funciona com parâmetro
+        }
+
         return entity;
     }
 

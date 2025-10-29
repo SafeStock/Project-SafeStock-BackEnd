@@ -13,71 +13,52 @@ import java.util.stream.Collectors;
 
 public class RegistroUsoMapper {
 
-    public static RegistroUsoEntity toEntity(RegistroUso d) {
-        if (d == null) return null;
-        RegistroUsoEntity e = new RegistroUsoEntity();
-        e.setId(d.getId());
-        e.setProduto(d.getProduto());
-        e.setDataValidade(d.getDataValidade());
-        e.setQuantidade(d.getQuantidade());
-        e.setDataHoraSaida(d.getDataHoraSaida());
+    public static RegistroUsoEntity toEntity(RegistroUso domain) {
+        if (domain == null) return null;
 
-        // ✅ Converte Funcionario → FuncionarioEntity
-        if (d.getFuncionario() != null) {
-            FuncionarioEntity fe = new FuncionarioEntity();
-            fe.setId(d.getFuncionario().getId());
-            fe.setNome(d.getFuncionario().getNome());
-            fe.setSobrenome(d.getFuncionario().getSobrenome());
-            e.setFuncionario(fe);
+        RegistroUsoEntity entity = new RegistroUsoEntity();
+        entity.setId(domain.getId());
+        entity.setProduto(domain.getProduto());
+        entity.setDataValidade(domain.getDataValidade());
+        entity.setQuantidade(domain.getQuantidade());
+        entity.setDataHoraSaida(domain.getDataHoraSaida());
+
+        // ✅ Converte Funcionario → FuncionarioEntity (apenas ID para evitar recursão)
+        if (domain.getFuncionario() != null && domain.getFuncionario().getId() != null) {
+            FuncionarioEntity funcionarioEntity = new FuncionarioEntity();
+            funcionarioEntity.setId(domain.getFuncionario().getId());
+            entity.setFuncionario(funcionarioEntity);
         }
 
-        // ✅ Converte lista de Relatorio → RelatorioEntity
-        if (d.getRelatorio() != null) {
-            List<RelatorioEntity> rels = d.getRelatorio().stream()
-                    .map(r -> {
-                        RelatorioEntity re = new RelatorioEntity();
-                        re.setIdRelatorio(r.getIdRelatorio());
-                        re.setDataRelatorio(r.getDataRelatorio());
-                        return re;
-                    }).collect(Collectors.toList());
-            e.setRelatorio(rels);
-        } else {
-            e.setRelatorio(Collections.emptyList());
-        }
+        // ⚠️ Relatorios são geralmente gerenciados separadamente
+        // Para evitar problemas de recursão, não mapeamos aqui
+        entity.setRelatorio(Collections.emptyList());
 
-        return e;
+        return entity;
     }
 
-    public static RegistroUso toDomain(RegistroUsoEntity e) {
-        if (e == null) return null;
-        RegistroUso d = new RegistroUso();
-        d.setId(e.getId());
-        d.setProduto(e.getProduto());
-        d.setDataValidade(e.getDataValidade());
-        d.setQuantidade(e.getQuantidade());
-        d.setDataHoraSaida(e.getDataHoraSaida());
+    public static RegistroUso toDomain(RegistroUsoEntity entity) {
+        if (entity == null) return null;
 
-        // ✅ Converte FuncionarioEntity → Funcionario
-        if (e.getFuncionario() != null) {
-            Funcionario f = new Funcionario();
-            f.setId(e.getFuncionario().getId());
-            f.setNome(e.getFuncionario().getNome());
-            f.setSobrenome(e.getFuncionario().getSobrenome());
-            d.setFuncionario(f);
+        RegistroUso domain = new RegistroUso();
+        domain.setId(entity.getId());
+        domain.setProduto(entity.getProduto());
+        domain.setDataValidade(entity.getDataValidade());
+        domain.setQuantidade(entity.getQuantidade());
+        domain.setDataHoraSaida(entity.getDataHoraSaida());
+
+        // ✅ Converte FuncionarioEntity → Funcionario (apenas dados básicos)
+        if (entity.getFuncionario() != null) {
+            Funcionario funcionario = new Funcionario();
+            funcionario.setId(entity.getFuncionario().getId());
+            funcionario.setNome(entity.getFuncionario().getNome());
+            funcionario.setSobrenome(entity.getFuncionario().getSobrenome());
+            domain.setFuncionario(funcionario);
         }
 
-        // ✅ Converte lista de RelatorioEntity → Relatorio
-        if (e.getRelatorio() != null) {
-            List<Relatorio> rels = e.getRelatorio().stream()
-                    .map(re -> {
-                        Relatorio r = new Relatorio();
-                        r.setIdRelatorio(re.getIdRelatorio());
-                        r.setDataRelatorio(re.getDataRelatorio());
-                        return r;
-                    }).collect(Collectors.toList());
-            d.setRelatorio(rels);
-        }
+        // ⚠️ Relatorios são carregados sob demanda se necessário
+        domain.setRelatorio(Collections.emptyList());
 
-        return d;
+        return domain;
     }
 }

@@ -53,4 +53,14 @@ public class RegistroUsoRepositoryImpl implements RegistroUsoRepository {
         Long total = jpa.sumQuantidadeRegistroDeUsoMes(ano, mes);
         return total != null ? total : 0L;
     }
+
+    @Override
+    public void deleteByFuncionarioId(Long funcionarioId) {
+        jpa.deleteByFuncionarioId(funcionarioId);
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return jpa.existsById(id);
+    }
 }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-
 @Repository
 public class FuncionarioRepositoryImpl implements FuncionarioRepository {
 
@@ -21,13 +20,6 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
     public FuncionarioRepositoryImpl(JpaFuncionarioRepository jpa) {
         this.jpa = jpa;
     }
-
-//    @Override
-//    public Funcionario save(Funcionario funcionario) {
-//        FuncionarioEntity entity = FuncionarioMapper.toEntity(funcionario);
-//        FuncionarioEntity saved = jpa.save(entity);
-//        return FuncionarioMapper.toDomain(saved);
-//    }
 
     @Override
     public List<Funcionario> buscarPorEmailDiferenteECargoDiferente(String email, CargoFuncionario cargo) {
@@ -54,5 +46,10 @@ public class FuncionarioRepositoryImpl implements FuncionarioRepository {
     @Override
     public Optional<Funcionario> buscarFuncionarioPorEmail(String email) {
         return jpa.findByEmail(email).map(FuncionarioMapper::toDomain);
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return jpa.existsById(id);
     }
 }

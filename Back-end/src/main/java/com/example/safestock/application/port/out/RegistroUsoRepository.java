@@ -12,4 +12,6 @@ public interface RegistroUsoRepository {
     Optional<RegistroUso> findById(Long id);
     void deleteById(Long id);
     Long sumQuantidadeRegistroDeUsoMes(int ano, int mes);
+    void deleteByFuncionarioId(Long funcionarioId);
+    boolean existsById(Long id);
 }
