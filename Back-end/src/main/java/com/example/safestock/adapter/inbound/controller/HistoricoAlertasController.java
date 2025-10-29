@@ -6,14 +6,13 @@ import com.example.safestock.application.port.in.HistoricoAlertasUseCase;
 import com.example.safestock.domain.model.HistoricoAlertas;
 import com.example.safestock.domain.model.Produto;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/historicoAlertas")
@@ -23,6 +22,35 @@ public class HistoricoAlertasController {
 
     public HistoricoAlertasController(HistoricoAlertasUseCase useCase) {
         this.useCase = useCase;
+    }
+
+    // ✅ ADICIONAR: Métodos GET do back antigo
+    @GetMapping
+    public ResponseEntity<List<HistoricoAlertas>> listarAlertasRecentes() {
+        return ResponseEntity.ok(useCase.findAlertasRecentes());
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<?> listarPaginado(@RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "5") int size) {
+        var resultado = useCase.listarPaginado(page, size);
+
+        // ✅ Manter a mesma estrutura de resposta do back antigo
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", resultado.getContent());
+        response.put("page", resultado.getNumber());
+        response.put("size", resultado.getSize());
+        response.put("totalPages", resultado.getTotalPages());
+        response.put("totalElements", resultado.getTotalElements());
+
+        return ResponseEntity.ok(response);
+    }
+
+    // ✅ ADICIONAR: Endpoint público igual ao back antigo
+    @GetMapping("/public/paged")
+    public ResponseEntity<?> listarPaginadoPublic(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "5") int size) {
+        return listarPaginado(page, size);
     }
 
     @PostMapping
@@ -49,6 +77,6 @@ public class HistoricoAlertasController {
         resp.setNomeProduto(saved.getNomeProduto());
         if (saved.getProduto() != null) resp.setProdutoId(saved.getProduto().getId());
 
-        return ResponseEntity.created(URI.create("/api/historico_alertas" + resp.getId())).body(resp);
+        return ResponseEntity.created(URI.create("/api/historico_alertas/" + resp.getId())).body(resp);
     }
 }

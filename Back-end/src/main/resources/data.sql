@@ -7,8 +7,8 @@ INSERT INTO Creche (nome, endereco, telefone, cnpj) VALUES
 
 -- Inserindo Funcionários
 INSERT INTO Funcionario (nome, sobrenome, cargo, email, senha, telefone, fk_creche) VALUES
-('Francisco', 'Silva', 'administracao', 'francisco@creche.com', '$2a$12$RPe0rl111G5cG/MCLSKjFO0XcVwE9FDa/dzQjPUsYzjqzBzI.03H6', '11999998888', 1),
-('Mariana', 'Souza', 'dono', 'mariana@creche.com', '$2a$12$mfVDLkghSevLBOek2Z5pUegzzZnt/MLz9xC47xMuxJqw6ps/UqUge', '11988887777', 1),
+('Francisco', 'Silva', 'dono', 'francisco@creche.com', '$2a$12$RPe0rl111G5cG/MCLSKjFO0XcVwE9FDa/dzQjPUsYzjqzBzI.03H6', '11999998888', 1),
+('Mariana', 'Souza', 'administracao', 'mariana@creche.com', '$2a$12$mfVDLkghSevLBOek2Z5pUegzzZnt/MLz9xC47xMuxJqw6ps/UqUge', '11988887777', 1),
 ('Roberta', 'Ferreira', 'limpeza', 'roberta@creche.com', '$2a$12$TaEHnHvRB19UEHaSIWEzlO6pDEXaifUtnK/vcXUJ.L6p8Ip1GAnDa', '11977776666', 1),
 ('João', 'Pereira', 'limpeza', 'joao@creche.com', '$2a$12$tPJN2xA65ct3eaK05/tGMesUuHbgFbWq.GpylxDKaOGFKqcX6dksC', '11966665555', 1),
 ('Ana', 'Lima', 'dono', 'ana@creche.com', '$2a$12$0pSA5CbX2FwzFJhFdvth7OL92L3Mm6rzYqsoBw58RwW0qmihjUvm6', '11955554444', 1);

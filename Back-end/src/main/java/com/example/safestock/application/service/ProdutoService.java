@@ -26,6 +26,7 @@ public class ProdutoService {
         produtoRepository.save(produto);
     }
 
+    @Transactional
     public List<Produto> listarTodos() {
         return produtoRepository.findAll();
     }

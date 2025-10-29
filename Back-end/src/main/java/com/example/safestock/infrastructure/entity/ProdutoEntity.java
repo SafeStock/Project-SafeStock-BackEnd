@@ -99,7 +99,8 @@ public class ProdutoEntity {
         return creche;
     }
 
-    public void setCreche() {
+    // ✅ CORREÇÃO: Adicionar parâmetro
+    public void setCreche(CrecheEntity creche) {
         this.creche = creche;
     }
 
@@ -112,6 +113,6 @@ public class ProdutoEntity {
     }
 
     public Long getCrecheId() {
-        return creche.getId();
+        return creche != null ? creche.getId() : null;
     }
 }

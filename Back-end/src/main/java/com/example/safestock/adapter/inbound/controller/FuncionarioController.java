@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -34,6 +36,27 @@ public class FuncionarioController {
         }
 
         return ResponseEntity.ok(funcionarios);
+    }
+
+    @GetMapping("/paged")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<?> listarFuncionariosPaginados(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        String emailLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        // ✅ TEMPORÁRIO: Retornar lista simples
+        List<FuncionarioResponse> funcionarios = useCase.buscarFuncionariosExcetoLogadoEDono(emailLogado);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", funcionarios);
+        response.put("page", 0);
+        response.put("size", funcionarios.size());
+        response.put("totalPages", 1);
+        response.put("totalElements", funcionarios.size());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/listar/{id}")
