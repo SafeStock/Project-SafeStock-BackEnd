@@ -46,7 +46,6 @@ public class FuncionarioController {
 
         String emailLogado = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        // ✅ TEMPORÁRIO: Retornar lista simples
         List<FuncionarioResponse> funcionarios = useCase.buscarFuncionariosExcetoLogadoEDono(emailLogado);
 
         Map<String, Object> response = new HashMap<>();
