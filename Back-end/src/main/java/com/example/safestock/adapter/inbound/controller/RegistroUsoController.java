@@ -54,6 +54,20 @@ public class RegistroUsoController {
         return ResponseEntity.ok(useCase.listar());
     }
 
+    @GetMapping("/paged")
+    public ResponseEntity<com.example.safestock.adapter.inbound.dto.PagedResponse<RegistroUso>> listarPaginado(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        
+        com.example.safestock.domain.model.PagedResult<RegistroUso> result = useCase.listarPaginado(page, size);
+        
+        if (result.getContent().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        
+        return ResponseEntity.ok(com.example.safestock.adapter.inbound.dto.PagedResponse.from(result));
+    }
+
     @DeleteMapping("/deletar/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         useCase.deletar(id);

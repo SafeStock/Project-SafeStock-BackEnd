@@ -53,4 +53,19 @@ public class FuncionarioService implements FuncionarioUseCase {
         return funcionarioRepository.buscarFuncionarioPorEmail(email)
                 .filter(f -> passwordEncoder.matches(senha, f.getSenha()));
     }
+
+    @Override
+    public com.example.safestock.domain.model.PagedResult<FuncionarioResponse> buscarFuncionariosExcetoLogadoEDonoPaginado(String emailLogado, int page, int size) {
+        List<FuncionarioResponse> all = buscarFuncionariosExcetoLogadoEDono(emailLogado);
+        
+        int start = page * size;
+        int end = Math.min(start + size, all.size());
+        
+        if (start >= all.size()) {
+            return new com.example.safestock.domain.model.PagedResult<>(List.of(), page, size, all.size());
+        }
+        
+        List<FuncionarioResponse> pageContent = all.subList(start, end);
+        return new com.example.safestock.domain.model.PagedResult<>(pageContent, page, size, all.size());
+    }
 }

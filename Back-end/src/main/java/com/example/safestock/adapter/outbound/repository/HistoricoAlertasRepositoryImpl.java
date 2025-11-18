@@ -7,6 +7,9 @@ import com.example.safestock.infrastructure.entity.HistoricoAlertasEntity;
 import com.example.safestock.infrastructure.jpa.JpaHistoricoAlertasRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Repository
 public class HistoricoAlertasRepositoryImpl implements HistoricoAlertasRepository {
 
@@ -22,5 +25,12 @@ public class HistoricoAlertasRepositoryImpl implements HistoricoAlertasRepositor
         HistoricoAlertasEntity entity = HistoricoAlertasMapper.toEntity(historicoAlertas);
         HistoricoAlertasEntity saved = jpa.save(entity);
         return HistoricoAlertasMapper.toDomain(saved);
+    }
+
+    @Override
+    public List<HistoricoAlertas> findAll() {
+        return jpa.findAll().stream()
+                .map(HistoricoAlertasMapper::toDomain)
+                .collect(Collectors.toList());
     }
 }

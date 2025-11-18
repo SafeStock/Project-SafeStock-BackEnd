@@ -7,22 +7,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-/**
- * Configuração de dados iniciais para desenvolvimento
- * Esta classe pode ser usada como alternativa ao data.sql para ter mais controle
- * sobre quando e como os dados são inseridos
- */
 @Configuration
 @Profile("dev") // Só executa no profile de desenvolvimento
 public class DataInitializationConfig {
 
     private static final Logger logger = LoggerFactory.getLogger(DataInitializationConfig.class);
 
-    /**
-     * Bean que executa na inicialização da aplicação
-     * Descomente e implemente se quiser usar inicialização programática
-     * ao invés do data.sql
-     */
     /*
     @Bean
     public CommandLineRunner initData(

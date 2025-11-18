@@ -63,16 +63,8 @@ public class FuncionarioMapper {
             d.setCreche(c);
         }
 
-        if (e.getRegistrosUso() != null) {
-            List<RegistroUso> registros = e.getRegistrosUso().stream()
-                    .map(re -> {
-                        RegistroUso r = new RegistroUso();
-                        r.setId(re.getId());
-                        r.setProduto(re.getProduto());
-                        return r;
-                    }).collect(Collectors.toList());
-            d.setRegistroUso(registros);
-        }
+        // Não mapear registrosUso para evitar LazyInitializationException
+        // Os registros não são necessários para autenticação e dashboard
 
         return d;
     }

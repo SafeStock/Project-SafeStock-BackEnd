@@ -8,12 +8,10 @@ import com.example.safestock.domain.model.Produto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/historicoAlertas")
@@ -23,6 +21,27 @@ public class HistoricoAlertasController {
 
     public HistoricoAlertasController(HistoricoAlertasUseCase useCase) {
         this.useCase = useCase;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<HistoricoAlertas>> listar() {
+        return ResponseEntity.ok(useCase.listar());
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<com.example.safestock.adapter.inbound.dto.PagedResponse<HistoricoAlertas>> listarPaginado(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        
+        // Controller apenas delega para UseCase - SEM lógica de negócio
+        com.example.safestock.domain.model.PagedResult<HistoricoAlertas> result = useCase.listarPaginado(page, size);
+        
+        if (result.getContent().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        
+        // Converte PagedResult (domínio) → PagedResponse (DTO)
+        return ResponseEntity.ok(com.example.safestock.adapter.inbound.dto.PagedResponse.from(result));
     }
 
     @PostMapping

@@ -36,6 +36,23 @@ public class FuncionarioController {
         return ResponseEntity.ok(funcionarios);
     }
 
+    @GetMapping("/paged")
+    @SecurityRequirement(name = "Bearer")
+    public ResponseEntity<com.example.safestock.adapter.inbound.dto.PagedResponse<FuncionarioResponse>> listarFuncionariosPaginado(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        
+        String emailLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+        com.example.safestock.domain.model.PagedResult<FuncionarioResponse> result = 
+                useCase.buscarFuncionariosExcetoLogadoEDonoPaginado(emailLogado, page, size);
+
+        if (result.getContent().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(com.example.safestock.adapter.inbound.dto.PagedResponse.from(result));
+    }
+
     @GetMapping("/listar/{id}")
     public ResponseEntity<Funcionario> buscarFuncionarioPorId(@PathVariable Long id) {
         Optional<Funcionario> funcionarioOpt = useCase.buscarFuncionarioPorId(id);

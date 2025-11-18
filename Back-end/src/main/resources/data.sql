@@ -2,19 +2,19 @@
 -- Este arquivo será executado automaticamente pelo Spring Boot na inicialização
 
 -- Inserindo Creche
-INSERT INTO Creche (nome, endereco, telefone, cnpj) VALUES
+INSERT INTO creche (nome, endereco, telefone, cnpj) VALUES
 ('CEI Terra Nossa', 'R. José Barros Magaldi, 216 - Jardim Sao Joao, São Paulo', '11985511715', '19283746000122');
 
 -- Inserindo Funcionários
-INSERT INTO Funcionario (nome, sobrenome, cargo, email, senha, telefone, fk_creche) VALUES
-('Francisco', 'Silva', 'administracao', 'francisco@creche.com', '$2a$12$RPe0rl111G5cG/MCLSKjFO0XcVwE9FDa/dzQjPUsYzjqzBzI.03H6', '11999998888', 1),
-('Mariana', 'Souza', 'dono', 'mariana@creche.com', '$2a$12$mfVDLkghSevLBOek2Z5pUegzzZnt/MLz9xC47xMuxJqw6ps/UqUge', '11988887777', 1),
-('Roberta', 'Ferreira', 'limpeza', 'roberta@creche.com', '$2a$12$TaEHnHvRB19UEHaSIWEzlO6pDEXaifUtnK/vcXUJ.L6p8Ip1GAnDa', '11977776666', 1),
-('João', 'Pereira', 'limpeza', 'joao@creche.com', '$2a$12$tPJN2xA65ct3eaK05/tGMesUuHbgFbWq.GpylxDKaOGFKqcX6dksC', '11966665555', 1),
-('Ana', 'Lima', 'dono', 'ana@creche.com', '$2a$12$0pSA5CbX2FwzFJhFdvth7OL92L3Mm6rzYqsoBw58RwW0qmihjUvm6', '11955554444', 1);
+INSERT INTO funcionario (nome, sobrenome, cargo, email, senha, telefone, fk_creche) VALUES
+('Francisco', 'Silva', 'administracao', 'francisco@creche.com', '$2b$12$OpIjGZmnDXbNxe0vzUgiGOZG.vPkPrQtwo.4Prpo2swvrjrY4DrYe', '11999998888', 1),
+('Mariana', 'Souza', 'dono', 'mariana@creche.com', '$2b$12$OpIjGZmnDXbNxe0vzUgiGOZG.vPkPrQtwo.4Prpo2swvrjrY4DrYe', '11988887777', 1),
+('Roberta', 'Ferreira', 'limpeza', 'roberta@creche.com', '$2b$12$OpIjGZmnDXbNxe0vzUgiGOZG.vPkPrQtwo.4Prpo2swvrjrY4DrYe', '11977776666', 1),
+('João', 'Pereira', 'limpeza', 'joao@creche.com', '$2b$12$OpIjGZmnDXbNxe0vzUgiGOZG.vPkPrQtwo.4Prpo2swvrjrY4DrYe', '11966665555', 1),
+('Ana', 'Lima', 'dono', 'ana@creche.com', '$2b$12$OpIjGZmnDXbNxe0vzUgiGOZG.vPkPrQtwo.4Prpo2swvrjrY4DrYe', '11955554444', 1);
 
 -- Inserindo Produtos
-INSERT INTO Produto (nome, categoria_produto, quantidade, limite_semanal_de_uso, data_validade, data_entrada, fk_creche) VALUES
+INSERT INTO produto (nome, categoria_produto, quantidade, limite_semanal_de_uso, data_validade, data_entrada, fk_creche) VALUES
 ('Detergente', 'chao', 50, 30, '2025-10-01', '2025-05-01', 1),
 ('Desinfetante', 'multi_uso', 40, 20, '2026-09-10', '2025-05-05', 1),
 ('Multiuso', 'vidros', 60, 35, '2030-06-20', '2025-05-10', 1),
@@ -37,7 +37,7 @@ INSERT INTO Produto (nome, categoria_produto, quantidade, limite_semanal_de_uso,
 ('Cera Líquida', 'multi_uso', 60, 70, '2025-09-25', '2025-07-25', 1);
 
 -- Inserindo Registros de Uso
-INSERT INTO Registro_uso (data_hora_saida, data_validade, produto, quantidade, fk_funcionario) VALUES
+INSERT INTO registro_uso (data_hora_saida, data_validade, produto, quantidade, fk_funcionario) VALUES
 ('2025-05-24 10:00:00', '2025-06-01', 'Detergente', 10, 4),
 ('2025-05-24 10:30:00', '2025-06-10', 'Desinfetante', 5, 5),
 ('2025-05-24 11:00:00', '2025-06-20', 'Multiuso', 8, 4),

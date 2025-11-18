@@ -1,5 +1,6 @@
 package com.example.safestock.application.port.in;
 
+import com.example.safestock.domain.model.PagedResult;
 import com.example.safestock.domain.model.Produto;
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +20,7 @@ public interface ProdutoUseCase {
     Long contarProdutosRetiradosDoEstoqueMesAtual();
     List<Produto> listarProdutosProximosDaValidade();
     List<Produto> listarProdutosProximosLimiteUso();
+    
+    // Paginação
+    PagedResult<Produto> listarPaginado(int page, int size);
 }
