@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/produtos")
@@ -41,6 +43,24 @@ public class ProdutoController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(PagedResponse.from(result));
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<?> listarPaginado(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        // ✅ TEMPORÁRIO: Retornar lista simples
+        List<Produto> produtos = produtoService.listarTodos();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", produtos);
+        response.put("page", 0);
+        response.put("size", produtos.size());
+        response.put("totalPages", 1);
+        response.put("totalElements", produtos.size());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")

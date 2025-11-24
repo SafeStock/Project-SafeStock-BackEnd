@@ -5,6 +5,8 @@ import com.example.safestock.application.port.out.HistoricoAlertasRepository;
 import com.example.safestock.domain.model.HistoricoAlertas;
 import com.example.safestock.infrastructure.entity.HistoricoAlertasEntity;
 import com.example.safestock.infrastructure.jpa.JpaHistoricoAlertasRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,7 +20,6 @@ public class HistoricoAlertasRepositoryImpl implements HistoricoAlertasRepositor
     public HistoricoAlertasRepositoryImpl(JpaHistoricoAlertasRepository jpa) {
         this.jpa = jpa;
     }
-
 
     @Override
     public HistoricoAlertas save(HistoricoAlertas historicoAlertas) {

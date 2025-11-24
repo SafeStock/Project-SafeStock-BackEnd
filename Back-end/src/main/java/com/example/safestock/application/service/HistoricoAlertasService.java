@@ -20,7 +20,6 @@ public class HistoricoAlertasService implements HistoricoAlertasUseCase {
 
     @Override
     public HistoricoAlertas criar(HistoricoAlertas historicoAlertas) {
-        // Regras de negócio aqui (ex: validações)
         return historicoAlertasRepository.save(historicoAlertas);
     }
 

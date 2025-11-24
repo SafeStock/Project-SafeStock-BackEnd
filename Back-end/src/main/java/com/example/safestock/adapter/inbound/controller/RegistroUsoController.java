@@ -6,12 +6,13 @@ import com.example.safestock.application.port.in.RegistroUsoUseCase;
 import com.example.safestock.domain.model.Funcionario;
 import com.example.safestock.domain.model.RegistroUso;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/registroUso")
@@ -24,34 +25,48 @@ public class RegistroUsoController {
     }
 
     @PostMapping("/cadastro")
-    public ResponseEntity<RegistroUsoResponse> create(@RequestBody @Valid RegistroUsoRequest req) {
+    public ResponseEntity<RegistroUsoResponse> create(@RequestBody @Valid RegistroUsoRequest request) {
+        RegistroUso registroUso = new RegistroUso();
+        registroUso.setProduto(request.getProduto());
+        registroUso.setDataValidade(request.getDataValidade());
+        registroUso.setQuantidade(request.getQuantidade());
+        registroUso.setDataHoraSaida(request.getDataHoraSaida());
 
-        RegistroUso d = new RegistroUso();
-        d.setProduto(req.getProduto());
-        d.setDataValidade(req.getDataValidade());
-        d.setQuantidade(req.getQuantidade());
-        d.setDataHoraSaida(req.getDataHoraSaida());
+        Funcionario funcionario = new Funcionario();
+        funcionario.setId(request.getFuncionarioId());
+        registroUso.setFuncionario(funcionario);
 
-        Funcionario f = new Funcionario();
-        f.setId(req.getFuncionarioId());
-        d.setFuncionario(f);
+        RegistroUso saved = useCase.criar(registroUso);
 
-        RegistroUso saved = useCase.criar(d);
+        RegistroUsoResponse response = toResponse(saved);
 
-        RegistroUsoResponse resp = new RegistroUsoResponse();
-        resp.setId(saved.getId());
-        resp.setProduto(saved.getProduto());
-        resp.setDataValidade(saved.getDataValidade());
-        resp.setQuantidade(saved.getQuantidade());
-        resp.setDataHoraSaida(saved.getDataHoraSaida());
-        resp.setFuncionarioId(saved.getFuncionario() != null ? saved.getFuncionario().getId() : null);
+        return ResponseEntity.created(URI.create("/api/registroUso/" + response.getId())).body(response);
+    }
 
-        return ResponseEntity.created(URI.create("/api/registroUso" + resp.getId())).body(resp);
+    @GetMapping("/paged")
+    public ResponseEntity<?> listarPaginado(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        // ✅ TEMPORÁRIO: Retornar lista simples
+        List<RegistroUso> registros = useCase.listar();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", registros);
+        response.put("page", 0);
+        response.put("size", registros.size());
+        response.put("totalPages", 1);
+        response.put("totalElements", registros.size());
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<RegistroUso>> list() {
-        return ResponseEntity.ok(useCase.listar());
+    public ResponseEntity<List<RegistroUsoResponse>> list() {
+        List<RegistroUsoResponse> response = useCase.listar().stream()
+                .map(this::toResponse)
+                .toList();
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/paged")
@@ -72,5 +87,17 @@ public class RegistroUsoController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         useCase.deletar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    private RegistroUsoResponse toResponse(RegistroUso registroUso) {
+        RegistroUsoResponse response = new RegistroUsoResponse();
+        response.setId(registroUso.getId());
+        response.setProduto(registroUso.getProduto());
+        response.setDataValidade(registroUso.getDataValidade());
+        response.setQuantidade(registroUso.getQuantidade());
+        response.setDataHoraSaida(registroUso.getDataHoraSaida());
+        response.setFuncionarioId(registroUso.getFuncionario() != null ?
+                registroUso.getFuncionario().getId() : null);
+        return response;
     }
 }

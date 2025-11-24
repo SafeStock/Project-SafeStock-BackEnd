@@ -6,7 +6,6 @@ import com.example.safestock.application.port.in.HistoricoAlertasUseCase;
 import com.example.safestock.domain.model.HistoricoAlertas;
 import com.example.safestock.domain.model.Produto;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,6 +67,6 @@ public class HistoricoAlertasController {
         resp.setNomeProduto(saved.getNomeProduto());
         if (saved.getProduto() != null) resp.setProdutoId(saved.getProduto().getId());
 
-        return ResponseEntity.created(URI.create("/api/historico_alertas" + resp.getId())).body(resp);
+        return ResponseEntity.created(URI.create("/api/historico_alertas/" + resp.getId())).body(resp);
     }
 }
