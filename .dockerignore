@@ -1,0 +1,20 @@
+# Build output and VCS metadata
+.git
+.gitignore
+.gitattributes
+Back-end/target/
+
+# IDE / tooling folders
+.idea
+.vscode
+.github
+
+# Documentation and configuration files not needed in container
+README.md
+LICENSE
+
+# Node modules (if any)
+node_modules
+
+# Test files
+Back-end/src/test/
